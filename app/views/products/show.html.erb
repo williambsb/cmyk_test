@@ -1,0 +1,14 @@
+This is <%= @product.title %>
+
+<%= form_with(url: line_items_path) do |f| %>
+  <%= f.fields_for :options do |ff| %>
+    <% @product.options.each_with_index do |option, i| %>
+      <%= ff.select "option#{i+1}", options_for_select(option.values, 2) %>
+    <% end %>
+  <% end %>
+
+  <%= f.fields_for Image do |fff| %>
+    <%= fff.file_field :files, multiple: true, onchange: "this.form.submit();" %>
+  <% end %>
+
+<% end %>

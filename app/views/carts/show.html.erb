@@ -1,0 +1,29 @@
+<%= form_for(Image.new, url: cart_line_items_path) do |f| %>
+  <%= f.file_field :files, multiple: true, onchange: "this.form.submit();" %>
+<% end %>
+<ul>
+  <% for item in @cart.line_items %>
+    <li>
+      <%= form_with(model: @product, url: line_items_path) do |f| %>
+        <%= f.select :product, options_for_select(@titles, 2) %>
+        <%= f.fields_for :options do |ff| %>
+          <% ShopifyAPI::Product.find(item.shopify_product_id).options.each_with_index do |option, i| %>
+            <%= ff.select "option#{i+1}", options_for_select(option.values, 2) %>
+          <% end %>
+        <% end %>
+        <%= f.number_field :quantity, value: 1, min: 1 %>
+      <% end %>
+      <%  Image.find(item.image_id).files.map { |file| file.url.split("/").last }.each do |f| %>
+        <%= f %>
+      <% end %>
+    </li>
+    <%= link_to "Destroy", line_item_path(line_item_id: item.id), method: :delete, confirm: "Are you sure?" %>
+
+  <% end %>
+</ul>
+
+<p>
+  <%= link_to "Continue shopping", products_path %>
+  <%= link_to "Checkout", "#" %>
+  <%= link_to "Clear cart", cart_path(@cart), method: :delete %>
+</p>

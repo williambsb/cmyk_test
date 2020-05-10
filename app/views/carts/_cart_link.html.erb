@@ -1,0 +1,6 @@
+<% if @cart %>
+  <% if !@cart&.line_items.empty? %>
+    <%= link_to "Cart", cart_path(@cart) %>
+    <%= @cart.line_items.map(&:quantity).sum %>
+  <% end %>
+<% end %>

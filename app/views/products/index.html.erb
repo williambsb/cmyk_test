@@ -1,0 +1,4 @@
+<% for product in @products %>
+  <%= link_to product.title, product_path(product) %>
+  <br/>
+<% end %>
